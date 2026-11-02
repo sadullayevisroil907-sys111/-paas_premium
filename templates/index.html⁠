@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentHub Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { background-color: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
+        .sidebar { background: #1e283c; min-height: 100vh; color: #fff; }
+        .sidebar a { color: #a9b7d0; text-decoration: none; padding: 12px 20px; display: block; border-radius: 8px; margin: 5px 15px; transition: 0.3s; }
+        .sidebar a:hover, .sidebar a.active { background: #3b82f6; color: white; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .bg-light-blue { background: #e0f2fe; color: #0284c7; }
+        .bg-light-green { background: #dcfce7; color: #16a34a; }
+        .bg-light-purple { background: #f3e8ff; color: #9333ea; }
+        .table th { background-color: #f8fafc; color: #64748b; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block sidebar py-4 px-0 position-fixed">
+                <h4 class="text-center mb-5 fw-bold"><i class="fa-solid fa-graduation-cap me-2 text-primary"></i>Student<span class="text-primary">Hub</span></h4>
+                <a href="#" class="active"><i class="fa-solid fa-chart-pie me-3"></i> Dashboard</a>
+                <a href="#"><i class="fa-solid fa-users me-3"></i> Talabalar</a>
+            </nav>
+            <main class="col-md-10 ms-sm-auto px-md-5 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-4 border-bottom">
+                    <h2 class="fw-bold">Dashboard</h2>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-4 mb-3">
+                        <div class="card p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div><p class="text-muted mb-1">Jami talabalar</p><h3 class="fw-bold mb-0">{{ total }}</h3></div>
+                                <div class="icon-box bg-light-blue"><i class="fa-solid fa-user-group"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div><p class="text-muted mb-1">O'rtacha ball</p><h3 class="fw-bold mb-0">{{ avg }}</h3></div>
+                                <div class="icon-box bg-light-green"><i class="fa-solid fa-chart-line"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div><p class="text-muted mb-1">Guruhlar soni</p><h3 class="fw-bold mb-0">{{ groups }}</h3></div>
+                                <div class="icon-box bg-light-purple"><i class="fa-solid fa-layer-group"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 mb-4">
+                        <div class="card p-4 h-100">
+                            <h5 class="fw-bold mb-4"><i class="fa-solid fa-user-plus me-2 text-primary"></i>Yangi talaba</h5>
+                            <form method="POST" action="/">
+                                <div class="mb-3"><input type="text" name="name" class="form-control bg-light" placeholder="F.I.Sh." required></div>
+                                <div class="mb-3"><input type="text" name="guruh" class="form-control bg-light" placeholder="Guruh raqami" required></div>
+                                <div class="mb-4"><input type="number" name="ball" class="form-control bg-light" placeholder="Ball (0-100)" required></div>
+                                <button type="submit" class="btn btn-primary w-100 fw-bold shadow-sm">Saqlash</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 mb-4">
+                        <div class="card p-4 h-100">
+                            <h5 class="fw-bold mb-4"><i class="fa-solid fa-list me-2 text-primary"></i>Talabalar ro'yxati</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead><tr><th>#</th><th>F.I.Sh.</th><th>Guruh</th><th>Ball</th><th>Holat</th></tr></thead>
+                                    <tbody>
+                                        {% for student in students %}
+                                        <tr>
+                                            <td>{{ student[0] }}</td><td class="fw-medium">{{ student[1] }}</td>
+                                            <td><span class="badge bg-secondary rounded-pill px-3">{{ student[2] }}</span></td>
+                                            <td class="fw-bold">{{ student[3] }}</td>
+                                            <td>
+                                                {% if student[3] >= 80 %}<span class="text-success"><i class="fa-solid fa-circle-check"></i> A'lo</span>
+                                                {% elif student[3] >= 60 %}<span class="text-warning"><i class="fa-solid fa-circle-exclamation"></i> Yaxshi</span>
+                                                {% else %}<span class="text-danger"><i class="fa-solid fa-circle-xmark"></i> Qoniqarsiz</span>{% endif %}
+                                            </td>
+                                        </tr>
+                                        {% else %}
+                                        <tr><td colspan="5" class="text-center py-4 text-muted">Ma'lumot yo'q</td></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
